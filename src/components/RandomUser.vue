@@ -4,26 +4,29 @@
         <div v-else class="user-details">
             <h2>{{ user?.name.first }} {{ user?.name.last }}</h2>
             <img :src="user?.picture.large" alt="User Image" class="user-image">
+
+            <div class="rating-slider">
+                <input type="range" min="1" max="100" v-model="rating" class="slider"/>
+                <div>Rating: {{ rating }}</div>
+            </div>
         </div>
 
         <div v-if="!loading">
-            <button class="refresh-button" @click="handleClick">Refresh</button>
+            <button class="confirm-rating-button" @click="handleConfirm">Interested</button>
+            <button class="refresh-button" @click="handleRefresh">Not interested</button>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-
-interface User {
-    name: { first: string, last: string }
-    picture: { large: string }
-}
+import { Component, Vue, Emit } from 'vue-property-decorator'
+import { RatedUser } from '../types/types'
 
 @Component
 export default class RandomUser extends Vue {
-    user: User | null = null
+    user: RatedUser | null = null
     loading = false
+    rating = 50
 
     created () {
         this.fetchUser()
@@ -31,14 +34,30 @@ export default class RandomUser extends Vue {
 
     private async fetchUser () {
         this.loading = true
+        this.rating = 50
         const response = await fetch('https://randomuser.me/api/')
         const data = await response.json()
 
-        this.user = data.results[0]
+        this.user = { ...data.results[0], rating: this.rating }
         this.loading = false
     }
 
-    private async handleClick () {
+    @Emit('refresh')
+    private async handleRefresh () {
+        await this.fetchUser()
+        return this.user
+    }
+
+    @Emit('confirm')
+    private emitUser () {
+        if (this.user) {
+            this.user.rating = this.rating
+        }
+        return this.user
+    }
+
+    private async handleConfirm () {
+        this.emitUser()
         await this.fetchUser()
     }
 }
@@ -69,7 +88,7 @@ export default class RandomUser extends Vue {
     width: 100%;
     padding: 10px;
     margin-top: 20px;
-    background-color: #4CAF50; /* Green */
+    background-color: #f44336; /* Red */
     border: none;
     color: white;
     text-align: center;
@@ -80,6 +99,35 @@ export default class RandomUser extends Vue {
 }
 
 .refresh-button:hover {
+    background-color: #d32f2f;
+}
+
+.confirm-rating-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-top: 20px;
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+.confirm-rating-button:hover {
     background-color: #45a049;
+}
+
+.rating-slider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.slider {
+    width: 100%;
 }
 </style>
