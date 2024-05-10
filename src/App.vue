@@ -1,20 +1,38 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <div class="user-controls">
+      <button @click="addUser" class="add-user-button">Add User</button>
+      <button @click="removeUser" class="remove-user-button">Remove User</button>
+    </div>
+
+    <transition-group name="list" tag="div" class="users-container">
+      <RandomUser v-for="(user, index) in users" :key="index"/>
+    </transition-group>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import HelloWorld from './components/HelloWorld.vue'
+import RandomUser from './components/RandomUser.vue'
 
 @Component({
   components: {
-    HelloWorld
+    // HelloWorld,
+    RandomUser
   }
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  users = [1, 2, 3]
+
+  private addUser () {
+    this.users.push(this.users.length + 1)
+  }
+
+  private removeUser () {
+    this.users.pop()
+  }
+}
 </script>
 
 <style>
@@ -25,5 +43,71 @@ export default class App extends Vue {}
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.users-container {
+  display: flex;
+  justify-content: space-around;
+  align-content: space-around;
+  flex-wrap: wrap;
+}
+
+.add-user-button {
+  display: block;
+  width: 200px;
+  height: 45px;
+  margin: 20px auto;
+  background-color: #4CAF50; /* Green */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 16px;
+  transition: all 0.5s;
+  cursor: pointer;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+}
+
+.add-user-button:hover {
+  background-color: #45a049;
+  color: white;
+}
+
+.user-controls {
+  display: flex;
+  justify-content: space-between;
+  width: 420px;
+  margin: 0 auto;
+}
+
+.remove-user-button {
+  display: block;
+  width: 200px;
+  height: 45px;
+  margin: 20px auto;
+  background-color: #f44336; /* Red */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 16px;
+  transition: all 0.5s;
+  cursor: pointer;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+}
+
+.remove-user-button:hover {
+  background-color: #d32f2f;
+  color: white;
+}
+
+.list-move {
+  transition: transform 0.5s ease;
+}
+
+.list-leave-active {
+  position: absolute;
+  opacity: 0;
+  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
 }
 </style>
