@@ -29,36 +29,36 @@ export default class RandomUser extends Vue {
     rating = 50
 
     created () {
-        this.fetchUser()
+      this.fetchUser()
     }
 
     private async fetchUser () {
-        this.loading = true
-        this.rating = 50
-        const response = await fetch('https://randomuser.me/api/')
-        const data = await response.json()
+      this.loading = true
+      this.rating = 50
+      const response = await fetch('https://randomuser.me/api/')
+      const data = await response.json()
 
-        this.user = { ...data.results[0], rating: this.rating }
-        this.loading = false
+      this.user = { ...data.results[0], rating: this.rating }
+      this.loading = false
     }
 
     @Emit('refresh')
     private async handleRefresh () {
-        await this.fetchUser()
-        return this.user
+      await this.fetchUser()
+      return this.user
     }
 
     @Emit('confirm')
     private emitUser () {
-        if (this.user) {
-            this.user.rating = this.rating
-        }
-        return this.user
+      if (this.user) {
+        this.user.rating = this.rating
+      }
+      return this.user
     }
 
     private async handleConfirm () {
-        this.emitUser()
-        await this.fetchUser()
+      this.emitUser()
+      await this.fetchUser()
     }
 }
 </script>
