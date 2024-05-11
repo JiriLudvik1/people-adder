@@ -21,7 +21,6 @@ import ConfirmedUsers from './components/ConfirmedUsers.vue'
 
 @Component({
   components: {
-    // HelloWorld,
     RandomUser,
     ConfirmedUsers
   }

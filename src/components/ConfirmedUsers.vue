@@ -5,7 +5,7 @@
             <div v-for="(user, index) in confirmedUsers" :key="index">
                 <img :src="user.picture.large" alt="User picture">
                 <p>{{ user.name.first }} {{ user.name.last }}</p>
-                <p>Rating: {{ user.rating }}</p>
+                <p>Rating: {{ user.rating }}  {{ getEmojiFromRating(user.rating) }}</p>
             </div>
         </div>
     </div>
@@ -21,6 +21,17 @@ export default class ConfirmedUsers extends Vue {
 
     addConfirmedUser (user: RatedUser) {
       this.confirmedUsers.push(user)
+    }
+
+    private getEmojiFromRating (rating: number):string {
+      switch (true) {
+      case (rating < 30):
+        return '😞'
+      case (rating < 60):
+        return '😐'
+      default:
+        return '🔥'
+      }
     }
 }
 </script>
