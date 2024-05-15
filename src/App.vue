@@ -1,16 +1,19 @@
 <template>
   <div id="app">
+    <div class="header">
+      <StatisticsDisplay ref="statisticsDisplay"/>
       <img alt="Vue logo" src="./assets/logo.png">
-      <div class="user-controls">
-        <button @click="addUser" class="add-user-button">Add User</button>
-        <button @click="removeUser" class="remove-user-button">Remove User</button>
-      </div>
-
-      <transition-group name="list" tag="div" class="users-container">
-        <RandomUser v-for="(user, index) in users" :key="index" @confirm="handleConfirm"/>
-      </transition-group>
-      <ConfirmedUsers ref="confirmedUsers"/>
     </div>
+    <div class="user-controls">
+      <button @click="addUser" class="add-user-button">Add User</button>
+      <button @click="removeUser" class="remove-user-button">Remove User</button>
+    </div>
+
+    <transition-group name="list" tag="div" class="users-container">
+      <RandomUser v-for="(user, index) in users" :key="index" @confirm="handleConfirm" @decline="handleDecline"/>
+    </transition-group>
+    <ConfirmedUsers ref="confirmedUsers"/>
+  </div>
 </template>
 
 <script lang="ts">
@@ -18,11 +21,13 @@ import { Component, Vue } from 'vue-property-decorator'
 import RandomUser from './components/RandomUser.vue'
 import { RatedUser } from './types/types'
 import ConfirmedUsers from './components/ConfirmedUsers.vue'
+import StatisticsDisplay from './components/StatisticsDisplay.vue'
 
 @Component({
   components: {
     RandomUser,
-    ConfirmedUsers
+    ConfirmedUsers,
+    StatisticsDisplay
   }
 })
 export default class App extends Vue {
@@ -38,7 +43,12 @@ export default class App extends Vue {
   }
 
   private handleConfirm (user: RatedUser) {
-    (this.$refs.confirmedUsers as ConfirmedUsers).addConfirmedUser(user)
+    (this.$refs.confirmedUsers as ConfirmedUsers).addConfirmedUser(user);
+    (this.$refs.statisticsDisplay as StatisticsDisplay).addAcceptedUser(user)
+  }
+
+  private handleDecline (user: RatedUser) {
+    (this.$refs.statisticsDisplay as StatisticsDisplay).addDeclinedUser()
   }
 }
 </script>
@@ -51,6 +61,12 @@ export default class App extends Vue {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .users-container {

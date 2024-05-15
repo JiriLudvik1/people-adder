@@ -42,7 +42,7 @@ export default class RandomUser extends Vue {
       this.loading = false
     }
 
-    @Emit('refresh')
+    @Emit('decline')
     private async handleRefresh () {
       await this.fetchUser()
       return this.user
