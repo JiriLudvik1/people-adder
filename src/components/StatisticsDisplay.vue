@@ -5,6 +5,7 @@
     <p>{{ declinedUsersCount }}</p>
     <p>{{ averageRating }}</p>
     <p>{{ acceptedPercent }}</p>
+    <p>{{ elapsedTime }}</p>
   </div>
 </template>
 
@@ -19,7 +20,41 @@ export default class StatisticsDisplay extends Vue {
   // pocet accepted rejected
   // average rating
 
+  data () {
+    return {
+      ratings: [],
+      firstRatingTime: undefined,
+      elapsedTime: 'No ratings yet!'
+    }
+  }
+
   ratings: RatingRecord[] = []
+  firstRatingTime: Date | undefined = undefined
+  elapsedTime = 'No ratings yet!'
+  intervalId: number | undefined = undefined
+
+  created () {
+    this.intervalId = window.setInterval(() => {
+      this.updateElapsedTime()
+    }, 1000) // Update every second
+  }
+
+  destroyed () {
+    if (this.intervalId !== undefined) {
+      window.clearInterval(this.intervalId)
+    }
+  }
+
+  updateElapsedTime () {
+    if (this.firstRatingTime === undefined) {
+      this.elapsedTime = 'No ratings yet!'
+    } else {
+      const now = new Date()
+      const diffMs = now.getTime() - this.firstRatingTime.getTime()
+      const diffSec = Math.floor(diffMs / 1000)
+      this.elapsedTime = `${Math.floor(diffSec / 60)} minutes and ${diffSec % 60} seconds`
+    }
+  }
 
   addAcceptedUser (acceptedUser: RatedUser) {
     const newRecord: RatingRecord = {
@@ -29,6 +64,10 @@ export default class StatisticsDisplay extends Vue {
     }
 
     this.ratings.push(newRecord)
+
+    if (this.firstRatingTime === undefined) {
+      this.firstRatingTime = newRecord.ratedAt
+    }
   }
 
   addDeclinedUser () {
@@ -39,6 +78,10 @@ export default class StatisticsDisplay extends Vue {
     }
 
     this.ratings.push(newRecord)
+
+    if (this.firstRatingTime === undefined) {
+      this.firstRatingTime = newRecord.ratedAt
+    }
   }
 
   private get acceptedUsersCount (): string {
@@ -67,16 +110,11 @@ export default class StatisticsDisplay extends Vue {
       .filter(r => r.decision === RatingOutcome.Accepted && r.rating !== undefined)
       .map(r => r.rating as number)
 
-    // funguje pokud zadavas porad stejny cisla
-    // nefunguje kdyz ty cisla jsou ruzna
-    // accepted ratings je dopici number[]
-    // funguje u ruznych cisel na pohodu
     const average = acceptedRatings.reduce((a, b) => Number(a) + Number(b), 0) / acceptedRatings.length
 
     return `Average rating: ${average.toFixed(1)}%`
   }
 }
-
 </script>
 
 <style>
