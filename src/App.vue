@@ -43,6 +43,7 @@ export default class App extends Vue {
   }
 
   private handleConfirm (user: RatedUser) {
+    console.log(user);
     (this.$refs.confirmedUsers as ConfirmedUsers).addConfirmedUser(user);
     (this.$refs.statisticsDisplay as StatisticsDisplay).addAcceptedUser(user)
   }

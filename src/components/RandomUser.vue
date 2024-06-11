@@ -34,11 +34,12 @@ export default class RandomUser extends Vue {
 
     private async fetchUser () {
       this.loading = true
-      this.rating = 50
       const response = await fetch('https://randomuser.me/api/')
       const data = await response.json()
 
       this.user = { ...data.results[0], rating: this.rating }
+      this.rating = 50
+
       this.loading = false
     }
 
@@ -49,11 +50,11 @@ export default class RandomUser extends Vue {
     }
 
     @Emit('confirm')
-    private emitUser () {
+    private emitUser ():RatedUser {
       if (this.user) {
         this.user.rating = this.rating
       }
-      return this.user
+      return this.user as RatedUser
     }
 
     private async handleConfirm () {

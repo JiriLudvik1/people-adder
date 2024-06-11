@@ -70,13 +70,8 @@ export default class StatisticsDisplay extends Vue {
     // funguje pokud zadavas porad stejny cisla
     // nefunguje kdyz ty cisla jsou ruzna
     // accepted ratings je dopici number[]
-    const sum = acceptedRatings.reduce((a, b) => a + b, 0)
-
     // funguje u ruznych cisel na pohodu
     const average = acceptedRatings.reduce((a, b) => Number(a) + Number(b), 0) / acceptedRatings.length
-    const ratings = [2, 3, 5]
-    const average2 = ratings.reduce((a, b) => a + b, 0) / acceptedRatings.length
-    console.log(average2)
 
     return `Average rating: ${average.toFixed(1)}%`
   }
