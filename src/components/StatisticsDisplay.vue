@@ -1,11 +1,17 @@
 <template>
   <div class="statistics-display">
     <h2>Statistics</h2>
-    <p>{{ acceptedUsersCount }}</p>
-    <p>{{ declinedUsersCount }}</p>
-    <p>{{ averageRating }}</p>
-    <p>{{ acceptedPercent }}</p>
-    <p>{{ elapsedTime }}</p>
+    <div class="statistic-row">
+      <p>{{ acceptedUsersCount }}</p>
+      <p>{{ declinedUsersCount }}</p>
+    </div>
+    <div class="statistic-row">
+      <p>{{ averageRating }}</p>
+      <p>{{ acceptedPercent }}</p>
+    </div>
+    <div class="statistic-row">
+      <p>{{ elapsedTime }}</p>
+    </div>
   </div>
 </template>
 
@@ -119,7 +125,7 @@ export default class StatisticsDisplay extends Vue {
 
 <style>
 .statistics-display {
-  width: 300px;
+  width: 400px;
   margin: 20px auto;
   padding: 20px;
   border: 1px solid #ccc;
@@ -136,5 +142,10 @@ export default class StatisticsDisplay extends Vue {
 .statistics-display p {
   margin: 10px 0;
   color: #333;
+}
+
+.statistic-row {
+  display: flex;
+  justify-content: space-between;
 }
 </style>

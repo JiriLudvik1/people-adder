@@ -2,7 +2,7 @@
 <div class="confirmed-users-container">
     <div class="confirmed-users-header"><h2>Confirmed Users</h2></div>
         <div class="confirmed-users">
-            <div v-for="(user, index) in confirmedUsers" :key="index">
+            <div v-for="(user, index) in confirmedUsers" :key="index" class="user-card">
                 <img :src="user.picture.large" alt="User picture">
                 <p>{{ user.name.first }} {{ user.name.last }}</p>
                 <p>Rating: {{ user.rating }}  {{ getEmojiFromRating(user.rating) }}</p>
@@ -64,7 +64,15 @@ export default class ConfirmedUsers extends Vue {
     position: relative;
     z-index: 0;
   }
-  .confirmed-users img {
+
+  .user-card {
+    width: 20%; /* Adjust this value to control the number of items per row */
+    padding: 1%; /* Optional: add some padding to create some space around the items */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    text-align: center; /* Center the text */
+  }
+
+  .user-card img {
     width: 50px;
     height: 50px;
     border-radius: 50%;

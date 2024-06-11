@@ -1,12 +1,15 @@
 <template>
   <div id="app">
-    <div class="header">
-      <StatisticsDisplay ref="statisticsDisplay"/>
-      <img alt="Vue logo" src="./assets/logo.png">
-    </div>
-    <div class="user-controls">
-      <button @click="addUser" class="add-user-button">Add User</button>
-      <button @click="removeUser" class="remove-user-button">Remove User</button>
+    <NavBar></NavBar>
+    <NavBar></NavBar>
+    <div class="header-controls">
+      <div class="header">
+        <StatisticsDisplay ref="statisticsDisplay"/>
+      </div>
+      <div class="user-controls">
+        <button @click="addUser" class="add-user-button">Add User</button>
+        <button @click="removeUser" class="remove-user-button">Remove User</button>
+      </div>
     </div>
 
     <transition-group name="list" tag="div" class="users-container">
@@ -22,9 +25,11 @@ import RandomUser from './components/RandomUser.vue'
 import { RatedUser } from './types/types'
 import ConfirmedUsers from './components/ConfirmedUsers.vue'
 import StatisticsDisplay from './components/StatisticsDisplay.vue'
+import NavBar from './components/NavBar.vue'
 
 @Component({
   components: {
+    NavBar,
     RandomUser,
     ConfirmedUsers,
     StatisticsDisplay
@@ -98,9 +103,8 @@ export default class App extends Vue {
 }
 
 .user-controls {
-  display: flex;
   justify-content: space-between;
-  width: 420px;
+  width: 200px;
   margin: 0 auto;
 }
 
@@ -133,5 +137,12 @@ export default class App extends Vue {
   position: absolute;
   opacity: 0;
   transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+.header-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
 }
 </style>
